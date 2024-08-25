@@ -9,39 +9,32 @@ class SettingsDialog(QDialog):
     def __init__(self, parent=None):
         super(SettingsDialog, self).__init__(parent)
         self.setWindowTitle('Processing Settings')
-
         self.slider1 = QSlider(Qt.Horizontal)
         self.slider2 = QSlider(Qt.Horizontal)
-
         layout = QVBoxLayout()
         layout.addWidget(QLabel('Customize Non-uniformity Correction:'))
         layout.addWidget(self.slider1)
         layout.addWidget(QLabel('Customize Contrast Enhancement:'))
         layout.addWidget(self.slider2)
-
         self.setLayout(layout)
 
 class ImageEditorDialog(QDialog):
     def __init__(self, parent=None):
         super(ImageEditorDialog, self).__init__(parent)
         self.setWindowTitle('Image Editor')
-
         self.brightness_slider = QSlider(Qt.Horizontal)
         self.contrast_slider = QSlider(Qt.Horizontal)
         self.save_button = QPushButton('Save Changes', self)
         self.save_button.clicked.connect(self.save_changes)
-
         layout = QVBoxLayout()
         layout.addWidget(QLabel('Adjust Brightness:'))
         layout.addWidget(self.brightness_slider)
         layout.addWidget(QLabel('Adjust Contrast:'))
         layout.addWidget(self.contrast_slider)
         layout.addWidget(self.save_button)
-
         self.setLayout(layout)
 
     def save_changes(self):
-        # Apply adjustments to the image
         self.parent().apply_manual_adjustments()
 
 class ThermalImageProcessor(QWidget):
@@ -54,41 +47,31 @@ class ThermalImageProcessor(QWidget):
         self.conversion_factor = 0.1
         self.brightness = 0
         self.contrast = 1.0
-
         self.init_ui()
 
     def init_ui(self):
         layout = QVBoxLayout()
-
         self.label = QLabel('Select a thermal image:')
         layout.addWidget(self.label)
-
         load_button = QPushButton('Load Image', self)
         load_button.clicked.connect(self.load_image)
         layout.addWidget(load_button)
-
         process_button = QPushButton('Process Image', self)
         process_button.clicked.connect(self.process_image)
         layout.addWidget(process_button)
-
         settings_button = QPushButton('Settings', self)
         settings_button.clicked.connect(self.show_settings)
         layout.addWidget(settings_button)
-
         manual_edit_button = QPushButton('Manual Edit', self)
         manual_edit_button.clicked.connect(self.show_manual_edit)
         layout.addWidget(manual_edit_button)
-
         self.reticle_label = QLabel('Temperature:')
         layout.addWidget(self.reticle_label)
-
         self.progress_bar = QProgressBar(self)
         layout.addWidget(self.progress_bar)
-
         save_action = QAction('Save Processed Image', self)
         save_action.triggered.connect(self.save_processed_image)
         self.addAction(save_action)
-
         self.setLayout(layout)
         self.setGeometry(100, 100, 400, 200)
         self.setWindowTitle('Thermal Image Processor')
@@ -118,27 +101,18 @@ class ThermalImageProcessor(QWidget):
 
     def process_image(self):
         if self.image_path is not None:
-            # Display status message
             self.reticle_label.setText('Processing image...')
-
             self.raw_data = cv2.imread(self.image_path, cv2.IMREAD_GRAYSCALE)
-
             corrected_data = self.non_uniformity_correction(self.raw_data)
             self.processed_data = self.contrast_enhancement(corrected_data)
-
-            # Display the processed image on the page
             self.display_processed_image()
-
-            # Update progress bar and status message
             self.progress_bar.setValue(100)
             self.reticle_label.setText('Image processed successfully')
 
     def display_processed_image(self):
         cv2.imshow("Original Thermal Image", cv2.applyColorMap(self.raw_data, cv2.COLORMAP_JET))
         cv2.imshow("Processed Thermal Image", cv2.applyColorMap(self.processed_data, cv2.COLORMAP_JET))
-
         cv2.setMouseCallback("Processed Thermal Image", self.mouse_callback)
-
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
@@ -179,12 +153,10 @@ class ThermalImageProcessor(QWidget):
 
     def apply_manual_adjustments(self):
         if self.raw_data is not None:
-            # Apply adjustments to the raw data
             adjusted_data = self.raw_data + self.brightness
             adjusted_data = np.clip(adjusted_data, 0, 255)
             adjusted_data = (adjusted_data * self.contrast).astype(np.uint8)
 
-            # Apply non-uniformity correction and display the processed image
             corrected_data = self.non_uniformity_correction(adjusted_data)
             self.processed_data = self.contrast_enhancement(corrected_data)
             self.display_processed_image()
