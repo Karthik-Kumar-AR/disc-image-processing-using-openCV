@@ -43,13 +43,6 @@ Welcome to the **Thermal Image Processor**! This application allows you to proce
 
 This project is for **educational purposes** only. It is designed to help you learn about thermal image processing and the use of image editing techniques. Please do not use it for any professional or critical applications.
 
-## 📷 Screenshots
-
-- **Image Processing Interface**:
-  ![Thermal Image Processing Interface](screenshot1.png)
-
-- **Manual Adjustments**:
-  ![Manual Adjustments](screenshot2.png)
 
 ## 🙌 Contributing
 
